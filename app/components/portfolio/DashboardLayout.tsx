@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -10,12 +9,18 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const pathname = usePathname();
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const navItems = [
     { 
       name: 'Overview', 
-      href: '/dashboard', 
+      id: 'overview',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -23,43 +28,28 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       )
     },
     { 
-      name: 'Portfolio', 
-      href: '/dashboard/portfolio', 
+      name: 'Analytics', 
+      id: 'analytics',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
         </svg>
       )
     },
     { 
       name: 'Market Insights', 
-      href: '/dashboard/market-insights', 
+      id: 'market-insights',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
         </svg>
       )
     },
-    { 
-      name: 'Settings', 
-      href: '/dashboard/settings', 
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      )
-    },
   ];
-
-  const isActive = (href: string) => {
-    if (href === '/dashboard') return pathname === '/dashboard';
-    return pathname.startsWith(href);
-  };
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-[#1a1d29] text-white overflow-hidden font-sans">
-      {/* Sidebar - Always visible on desktop (md+), toggle on mobile */}
+      {/* Sidebar */}
       <div 
         className={`fixed md:relative z-40 transition-all duration-300 ease-in-out ${
           isSidebarOpen ? 'w-64 sm:w-72' : 'w-0'
@@ -75,7 +65,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <span className="text-[#4a9d7e] text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Terminal</span>
             </div>
           </Link>
-          {/* Close button for mobile sidebar */}
           <button
             onClick={() => setIsSidebarOpen(false)}
             className="md:hidden p-1 rounded-lg text-gray-400 hover:text-white transition-colors"
@@ -89,23 +78,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex-1 px-2 sm:px-4 py-4 sm:py-6 space-y-1">
           <p className="px-2 sm:px-4 text-[8px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-3 sm:mb-4">Main Menu</p>
           {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center space-x-2 sm:space-x-3 px-2 sm:px-4 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl transition-all duration-300 group ${
-                isActive(item.href)
-                  ? 'bg-[#4a9d7e]/10 text-[#4a9d7e] border border-[#4a9d7e]/20'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
+            <button
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              className="w-full flex items-center space-x-2 sm:space-x-3 px-2 sm:px-4 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl transition-all duration-300 group text-gray-400 hover:text-white hover:bg-white/5"
             >
-              <span className={`transition-colors duration-300 ${isActive(item.href) ? 'text-[#4a9d7e]' : 'text-gray-500 group-hover:text-white'}`}>
+              <span className="transition-colors duration-300 text-gray-500 group-hover:text-white">
                 {item.icon}
               </span>
               <span className="font-bold uppercase tracking-widest text-[9px] sm:text-[11px]">{item.name}</span>
-              {isActive(item.href) && (
-                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#4a9d7e] shadow-[0_0_10px_rgba(74,157,126,0.8)]" />
-              )}
-            </Link>
+            </button>
           ))}
         </div>
 
@@ -128,32 +110,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
       </div>
 
-      {/* Overlay for mobile when sidebar is open */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden bg-[#1a1d29] w-full">
-        {/* Top Bar */}
         <header className="bg-[#1a1d29] border-b border-gray-800/50 px-3 sm:px-4 md:px-8 py-3 sm:py-4 md:py-5 flex items-center justify-between z-30">
           <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="md:hidden p-1.5 sm:p-2 rounded-lg bg-gray-800/50 text-gray-400 hover:text-white transition-colors"
             >
-              {isSidebarOpen ? (
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
             <div className="hidden sm:block h-4 sm:h-6 w-px bg-gray-800" />
             <div className="hidden sm:flex items-center space-x-1.5 sm:space-x-2">
@@ -171,15 +138,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-[#4a9d7e] to-[#2d5d4b] rounded-lg sm:rounded-xl flex items-center justify-center font-bold text-white text-xs sm:text-sm shadow-lg group-hover:shadow-[#4a9d7e]/20 transition-all duration-300">
                 JW
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-3 h-3 sm:w-4 sm:h-4 bg-[#1a1d29] rounded-full flex items-center justify-center">
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[#4a9d7e] rounded-full" />
-              </div>
             </div>
           </div>
         </header>
 
-        {/* Content Area */}
-        <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 custom-scrollbar">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 custom-scrollbar space-y-12">
           {children}
         </main>
       </div>

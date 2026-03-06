@@ -1,21 +1,27 @@
+
 import DashboardLayout from '../components/portfolio/DashboardLayout';
 import PortfolioOverview from '../components/portfolio/PortfolioOverview';
 import MarketOverview from '../components/portfolio/MarketOverview';
 import MarketInsightsFeed from '../components/portfolio/MarketInsightsFeed';
+import InvestmentAnalytics from '../components/portfolio/InvestmentAnalytics';
 
 export default function DashboardPage() {
   return (
     <DashboardLayout>
-      <div className="p-2 sm:p-3 md:p-4 lg:p-6 space-y-4 sm:space-y-6 md:space-y-8 w-full">
-        {/* Portfolio Overview */}
-        <PortfolioOverview />
+      <div className="space-y-12">
+        <div id="overview" className="scroll-mt-24">
+          <PortfolioOverview />
+        </div>
 
-        {/* Market Overview & Insights */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 w-full">
-          <div className="md:col-span-2 lg:col-span-2 w-full">
+        <div id="analytics" className="scroll-mt-24">
+          <InvestmentAnalytics />
+        </div>
+        
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
+          <div className="xl:col-span-2">
             <MarketOverview />
           </div>
-          <div className="w-full">
+          <div id="market-insights" className="xl:col-span-1 scroll-mt-24">
             <MarketInsightsFeed />
           </div>
         </div>
