@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: '/smartinvest-icon.svg',
+  },
   title: "SmartInvest - Institutional-Grade Asset Management",
   description: "Advanced algorithms & professional tools for serious investors.",
 };
@@ -25,7 +28,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+        <html lang="en" className="scroll-smooth">
+          <head>
+            <link rel="icon" href="/smartinvest-icon.svg" type="image/svg+xml" />
+          </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#1a1d29] text-white`}
       >

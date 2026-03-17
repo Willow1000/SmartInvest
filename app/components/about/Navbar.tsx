@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useModal } from '../auth/ModalContext';
 
@@ -42,8 +43,14 @@ export default function AboutNavbar() {
           {/* Logo - Redirects to / (root) */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center space-x-3 group">
-              <div className="w-10 h-10 bg-[#4a9d7e] rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(74,157,126,0.3)] group-hover:shadow-[0_0_20px_rgba(74,157,126,0.5)] transition-all duration-300">
-                <span className="text-white font-bold text-2xl tracking-tighter">S</span>
+              <div className="w-10 h-10 flex items-center justify-center">
+                <Image
+                  src="/smartinvest-icon.png"
+                  alt="SmartInvest Logo"
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                />
               </div>
               <span className="text-white text-2xl font-extrabold tracking-tight">SmartInvest</span>
             </Link>
