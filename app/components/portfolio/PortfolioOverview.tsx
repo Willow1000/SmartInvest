@@ -4,7 +4,7 @@
 import { useModal } from '../auth/ModalContext';
 
 export default function PortfolioOverview() {
-  const { openDeposit, balance, currencyProfits, transactions } = useModal();
+  const { openDeposit, openWithdraw, balance, currencyProfits, transactions } = useModal();
 
   const totalEarnings = currencyProfits.reduce((acc, curr) => acc + curr.profit, 0);
   const totalInvestment = currencyProfits.reduce((acc, curr) => acc + curr.investment, 0);
@@ -49,7 +49,10 @@ export default function PortfolioOverview() {
             >
               Deposit
             </button>
-            <button className="flex-1 bg-gray-800/50 hover:bg-gray-800 text-white px-4 py-3 rounded-xl font-bold uppercase tracking-widest text-[10px] transition-all duration-300 border border-gray-700/50">
+            <button
+              onClick={openWithdraw}
+              className="flex-1 bg-gray-800/50 hover:bg-gray-800 text-white px-4 py-3 rounded-xl font-bold uppercase tracking-widest text-[10px] transition-all duration-300 border border-gray-700/50"
+            >
               Withdraw
             </button>
           </div>
@@ -128,39 +131,45 @@ export default function PortfolioOverview() {
         <div className="bg-[#252836]/30 backdrop-blur-xl border border-gray-800/50 rounded-3xl p-8 flex flex-col">
           <h3 className="text-xl font-bold text-white mb-6 tracking-tight">Transaction Ledger</h3>
           <div className="flex-1 space-y-3 overflow-y-auto max-h-[480px] pr-2 custom-scrollbar">
-            {transactions.map((tx) => (
-              <div key={tx.id} className="flex items-center justify-between p-4 bg-[#1a1d29]/40 border border-gray-800/30 rounded-2xl">
-                <div className="flex items-center space-x-4">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${
-                    tx.type === 'deposit' 
-                      ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' 
-                      : 'bg-rose-500/10 border-rose-500/20 text-rose-500'
-                  }`}>
-                    {tx.type === 'deposit' ? (
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
-                      </svg>
-                    ) : (
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 13l-5 5m0 0l-5-5m5 5V6" />
-                      </svg>
-                    )}
+            {transactions.length > 0 ? (
+              transactions.map((tx) => (
+                <div key={tx.id} className="flex items-center justify-between p-4 bg-[#1a1d29]/40 border border-gray-800/30 rounded-2xl">
+                  <div className="flex items-center space-x-4">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${
+                      tx.type === 'deposit' 
+                        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' 
+                        : 'bg-rose-500/10 border-rose-500/20 text-rose-500'
+                    }`}>
+                      {tx.type === 'deposit' ? (
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 13l-5 5m0 0l-5-5m5 5V6" />
+                        </svg>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-white font-bold text-sm capitalize">{tx.type}</p>
+                      <p className="text-gray-500 text-[10px] font-medium">{tx.timestamp}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-white font-bold text-sm capitalize">{tx.type}</p>
-                    <p className="text-gray-500 text-[10px] font-medium">{tx.timestamp}</p>
+                  <div className="text-right">
+                    <p className={`font-bold text-sm ${tx.type === 'deposit' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                      {tx.type === 'deposit' ? '+' : '-'}${tx.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    </p>
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-gray-600 px-2 py-0.5 bg-gray-800/50 rounded-md">
+                      {tx.status}
+                    </span>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className={`font-bold text-sm ${tx.type === 'deposit' ? 'text-emerald-500' : 'text-rose-500'}`}>
-                    {tx.type === 'deposit' ? '+' : '-'}${tx.amount.toLocaleString()}
-                  </p>
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-gray-600 px-2 py-0.5 bg-gray-800/50 rounded-md">
-                    {tx.status}
-                  </span>
-                </div>
+              ))
+            ) : (
+              <div className="flex items-center justify-center h-32 text-gray-500 text-[10px] font-bold uppercase tracking-widest">
+                No transactions yet
               </div>
-            ))}
+            )}
           </div>
           <button className="w-full mt-6 py-3 border border-gray-800 rounded-xl text-gray-500 hover:text-white hover:bg-white/5 transition-all text-[10px] font-bold uppercase tracking-widest">
             Export Full Ledger

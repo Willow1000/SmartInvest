@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 
 export interface NewsInsight {
   id: string | number;
@@ -30,7 +30,7 @@ export interface CurrencyProfit {
   investment: number;
   profit: number;
   profitPercent: number;
-  projection: number; // 12-month projection
+  projection: number;
 }
 
 export interface PerformanceDataPoint {
@@ -45,7 +45,7 @@ export interface AnalyticsMetrics {
   beta: number;
   volatility: number;
   timeWeightedReturn: number;
-  cagr: number; // Compound Annual Growth Rate
+  cagr: number;
 }
 
 interface ModalContextType {
@@ -65,13 +65,20 @@ interface ModalContextType {
   openDeposit: () => void;
   closeDeposit: () => void;
 
+  // Withdraw Modal
+  isWithdrawOpen: boolean;
+  openWithdraw: () => void;
+  closeWithdraw: () => void;
+
   // Portfolio Data
   balance: number;
   transactions: Transaction[];
   currencyProfits: CurrencyProfit[];
   performanceHistory: PerformanceDataPoint[];
   analytics: AnalyticsMetrics;
-  addTransaction: (amount: number, type: 'deposit' | 'withdrawal') => void;
+  
+  // Transaction Methods
+  addTransaction: (amount: number, type: 'deposit' | 'withdrawal') => boolean;
 }
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
@@ -81,6 +88,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   const [isNewsOpen, setIsNewsOpen] = useState(false);
   const [selectedNews, setSelectedNews] = useState<NewsInsight | null>(null);
   const [isDepositOpen, setIsDepositOpen] = useState(false);
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
 
   // Initial Portfolio State
   const [balance, setBalance] = useState(125430.50);
@@ -90,7 +98,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
     { id: 'tx-3', type: 'withdrawal', amount: 5000, status: 'completed', timestamp: '2026-03-02 09:15', method: 'Bank Transfer' },
   ]);
 
-  const [currencyProfits, setCurrencyProfits] = useState<CurrencyProfit[]>([
+  const [currencyProfits] = useState<CurrencyProfit[]>([
     { symbol: 'BTC', name: 'Bitcoin', investment: 45000, profit: 12450.30, profitPercent: 27.6, projection: 18500 },
     { symbol: 'ETH', name: 'Ethereum', investment: 32000, profit: 8240.45, profitPercent: 25.7, projection: 12000 },
     { symbol: 'SOL', name: 'Solana', investment: 15000, profit: 4560.20, profitPercent: 30.4, projection: 7500 },
@@ -98,7 +106,6 @@ export function ModalProvider({ children }: { children: ReactNode }) {
     { symbol: 'XAU', name: 'Gold', investment: 13430.50, profit: 1139.65, profitPercent: 8.5, projection: 2200 },
   ]);
 
-  // Performance History Data Points (Last 12 Months)
   const performanceHistory: PerformanceDataPoint[] = [
     { date: '2025-03', value: 75000, profit: 0 },
     { date: '2025-04', value: 78500, profit: 3500 },
@@ -114,7 +121,6 @@ export function ModalProvider({ children }: { children: ReactNode }) {
     { date: '2026-02', value: 125430.50, profit: 50430.50 },
   ];
 
-  // Advanced Analytics Metrics
   const analytics: AnalyticsMetrics = {
     sharpeRatio: 2.84,
     alpha: 0.12,
@@ -139,23 +145,54 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   const openDeposit = () => setIsDepositOpen(true);
   const closeDeposit = () => setIsDepositOpen(false);
 
-  const addTransaction = (amount: number, type: 'deposit' | 'withdrawal') => {
+  const openWithdraw = () => setIsWithdrawOpen(true);
+  const closeWithdraw = () => setIsWithdrawOpen(false);
+
+  const addTransaction = useCallback((amount: number, type: 'deposit' | 'withdrawal'): boolean => {
+    // Validate amount
+    if (isNaN(amount) || amount <= 0) {
+      console.error('Invalid amount:', amount);
+      return false;
+    }
+
+    // Validate withdrawal
+    if (type === 'withdrawal' && amount > balance) {
+      console.error('Insufficient funds for withdrawal');
+      return false;
+    }
+
+    // Create new transaction
+    const now = new Date();
+    const timestamp = now.toLocaleString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    }).replace(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+)/, '$3-$1-$2 $4:$5');
+
     const newTx: Transaction = {
       id: `tx-${Date.now()}`,
       type,
       amount,
       status: 'completed',
-      timestamp: new Date().toISOString().replace('T', ' ').slice(0, 16),
-      method: 'Instant Payment',
+      timestamp,
+      method: type === 'deposit' ? 'Bank Transfer' : 'Instant Withdrawal',
     };
-    
+
+    // Update transactions
     setTransactions(prev => [newTx, ...prev]);
+
+    // Update balance
     if (type === 'deposit') {
       setBalance(prev => prev + amount);
     } else {
       setBalance(prev => prev - amount);
     }
-  };
+
+    return true;
+  }, [balance]);
 
   return (
     <ModalContext.Provider 
@@ -163,7 +200,9 @@ export function ModalProvider({ children }: { children: ReactNode }) {
         isSignupOpen, openSignup, closeSignup,
         isNewsOpen, selectedNews, openNews, closeNews,
         isDepositOpen, openDeposit, closeDeposit,
-        balance, transactions, currencyProfits, performanceHistory, analytics, addTransaction
+        isWithdrawOpen, openWithdraw, closeWithdraw,
+        balance, transactions, currencyProfits, performanceHistory, analytics,
+        addTransaction
       }}
     >
       {children}
