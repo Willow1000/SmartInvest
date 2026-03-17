@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
 export default function Partners() {
   const [isVisible, setIsVisible] = useState(false);
@@ -11,67 +12,37 @@ export default function Partners() {
       name: 'TradingView',
       category: 'Charting & Analytics',
       description: 'Advanced charting tools and market analysis',
-      logo: (
-        <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
-          <rect width="100" height="100" fill="#1a1d29" rx="12"/>
-          <text x="50" y="60" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#4a9d7e" fontFamily="Arial">TV</text>
-        </svg>
-      ),
+      logo: '/tradingview.svg',
     },
     {
       name: 'Bybit',
       category: 'Cryptocurrency Exchange',
       description: 'Leading crypto derivatives trading platform',
-      logo: (
-        <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
-          <rect width="100" height="100" fill="#1a1d29" rx="12"/>
-          <text x="50" y="60" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#4a9d7e" fontFamily="Arial">BB</text>
-        </svg>
-      ),
+      logo: '/bybit.svg',
     },
     {
       name: 'Binance',
       category: 'Cryptocurrency Exchange',
-      description: 'World\'s largest crypto trading platform',
-      logo: (
-        <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
-          <rect width="100" height="100" fill="#1a1d29" rx="12"/>
-          <text x="50" y="60" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#4a9d7e" fontFamily="Arial">BN</text>
-        </svg>
-      ),
+      description: "World's largest crypto trading platform",
+      logo: '/binance.svg',
     },
     {
       name: 'Interactive Brokers',
       category: 'Brokerage',
       description: 'Global trading and investing platform',
-      logo: (
-        <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
-          <rect width="100" height="100" fill="#1a1d29" rx="12"/>
-          <text x="50" y="60" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#4a9d7e" fontFamily="Arial">IB</text>
-        </svg>
-      ),
+      logo: '/interactive-brokers.png',
     },
     {
       name: 'Kraken',
       category: 'Cryptocurrency Exchange',
       description: 'Secure and reliable crypto trading',
-      logo: (
-        <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
-          <rect width="100" height="100" fill="#1a1d29" rx="12"/>
-          <text x="50" y="60" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#4a9d7e" fontFamily="Arial">KR</text>
-        </svg>
-      ),
+      logo: '/kraken.svg',
     },
     {
       name: 'FTX',
       category: 'Derivatives Exchange',
       description: 'Advanced crypto derivatives trading',
-      logo: (
-        <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none">
-          <rect width="100" height="100" fill="#1a1d29" rx="12"/>
-          <text x="50" y="60" textAnchor="middle" fontSize="24" fontWeight="bold" fill="#4a9d7e" fontFamily="Arial">FTX</text>
-        </svg>
-      ),
+      logo: '/ftx.png',
     },
   ];
 
@@ -138,8 +109,14 @@ export default function Partners() {
 
               {/* Logo */}
               <div className="mb-6 flex items-center justify-center">
-                <div className="p-4 bg-[#4a9d7e]/5 rounded-xl group-hover:bg-[#4a9d7e]/10 transition-all duration-300">
-                  {partner.logo}
+                <div className="p-4 bg-white/5 rounded-xl group-hover:bg-white/10 transition-all duration-300 w-24 h-24 flex items-center justify-center relative">
+                  <Image
+                    src={partner.logo}
+                    alt={`${partner.name} logo`}
+                    width={80}
+                    height={80}
+                    className="object-contain transition-transform duration-500 group-hover:scale-110 filter brightness-110"
+                  />
                 </div>
               </div>
 
@@ -194,7 +171,7 @@ export default function Partners() {
                 ),
               },
             ].map((benefit, i) => (
-              <div key={i} className="text-center">
+              <div key={i} className="text-center group">
                 <div className="w-16 h-16 bg-[#4a9d7e]/10 rounded-2xl flex items-center justify-center text-[#4a9d7e] mx-auto mb-6 group-hover:scale-110 transition-transform">
                   {benefit.icon}
                 </div>
