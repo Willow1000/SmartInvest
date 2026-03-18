@@ -25,18 +25,17 @@ export default function Navbar() {
   const navItems = [
     { name: 'Markets', href: '/#assets' },
     { name: 'Performance', href: '/#performance' },
-        { name: 'Contact Us', href: '/about#contact-location' },
+    { name: 'Contact Us', href: '/about#contact-location' },
     { name: 'FAQ', href: '/#faq' },
-        { name: 'About Us', href: '/about' },
+    { name: 'About Us', href: '/about' },
   ];
 
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-[#1a1d29]/80 backdrop-blur-lg border-b border-gray-800/50 py-3' 
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+          ? 'bg-[#1a1d29]/80 backdrop-blur-lg border-b border-gray-800/50 py-3'
           : 'bg-transparent py-6'
-      }`}
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">

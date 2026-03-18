@@ -115,7 +115,7 @@ export default function Partners() {
                     alt={`${partner.name} logo`}
                     width={80}
                     height={80}
-                    className="object-contain transition-transform duration-500 group-hover:scale-110 filter brightness-110"
+                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 filter brightness-110"
                   />
                 </div>
               </div>

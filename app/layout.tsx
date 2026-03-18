@@ -28,12 +28,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-        <html lang="en" className="scroll-smooth">
-          <head>
-            <link rel="icon" href="/smartinvest-icon.svg" type="image/svg+xml" />
-          </head>
+    <html lang="en" className="scroll-smooth">
+      <head>
+        <link rel="icon" href="/smartinvest-icon.svg" type="image/svg+xml" />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#1a1d29] text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#1a1d29] text-white overflow-x-hidden`}
       >
         <ModalProvider>
           {children}

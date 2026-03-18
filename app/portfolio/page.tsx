@@ -4,6 +4,7 @@ import PortfolioOverview from '../components/portfolio/PortfolioOverview';
 import MarketOverview from '../components/portfolio/MarketOverview';
 import MarketInsightsFeed from '../components/portfolio/MarketInsightsFeed';
 import InvestmentAnalytics from '../components/portfolio/InvestmentAnalytics';
+import Wallet from '../components/portfolio/Wallet';
 
 export default function DashboardPage() {
   return (
@@ -13,10 +14,12 @@ export default function DashboardPage() {
           <PortfolioOverview />
         </div>
 
+        <Wallet />
+
         <div id="analytics" className="scroll-mt-24">
           <InvestmentAnalytics />
         </div>
-        
+
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
           <div className="xl:col-span-2">
             <MarketOverview />

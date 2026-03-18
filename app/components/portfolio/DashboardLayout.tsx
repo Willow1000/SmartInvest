@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -9,8 +10,10 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [activeSection, setActiveSection] = useState('overview');
 
   const scrollToSection = (id: string) => {
+    setActiveSection(id);
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -18,8 +21,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   const navItems = [
-    { 
-      name: 'Overview', 
+    {
+      name: 'Overview',
       id: 'overview',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -27,8 +30,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </svg>
       )
     },
-    { 
-      name: 'Analytics', 
+    {
+      name: 'Wallet',
+      id: 'wallet',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+        </svg>
+      )
+    },
+    {
+      name: 'Analytics',
       id: 'analytics',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -36,12 +48,22 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </svg>
       )
     },
-    { 
-      name: 'Market Insights', 
+    {
+      name: 'Market Insights',
       id: 'market-insights',
       icon: (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+        </svg>
+      )
+    },
+    {
+      name: 'Automations',
+      id: 'automations',
+      icon: (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
       )
     },
@@ -50,24 +72,29 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <div className="flex flex-col md:flex-row h-screen bg-[#1a1d29] text-white overflow-hidden font-sans">
       {/* Sidebar */}
-      <div 
-        className={`fixed md:relative z-40 transition-all duration-300 ease-in-out ${
-          isSidebarOpen ? 'w-64 sm:w-72' : 'w-0'
-        } md:w-72 bg-[#1a1d29] border-r border-gray-800/50 overflow-hidden flex flex-col`}
+      <div
+        className={`fixed md:relative z-40 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-64 sm:w-72 border-r border-gray-800/50' : 'w-0 border-r-0'
+          } bg-[#1a1d29] overflow-hidden flex flex-col whitespace-nowrap`}
       >
         <div className="p-4 sm:p-6 md:p-8 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 bg-[#4a9d7e] rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(74,157,126,0.3)] group-hover:shadow-[0_0_20px_rgba(74,157,126,0.5)] transition-all duration-300">
-              <span className="text-white font-bold text-2xl tracking-tighter">S</span>
+            <div className="w-10 h-10 flex items-center justify-center">
+              <Image
+                src="/smartinvest-icon.png"
+                alt="SmartInvest Logo"
+                width={100}
+                height={100}
+                className="object-contain"
+              />
             </div>
-            <div className="flex flex-col hidden sm:flex">
+            <div className="flex flex-col">
               <span className="text-white text-lg sm:text-xl font-extrabold tracking-tight leading-none">SmartInvest</span>
               <span className="text-[#4a9d7e] text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Terminal</span>
             </div>
           </Link>
           <button
             onClick={() => setIsSidebarOpen(false)}
-            className="md:hidden p-1 rounded-lg text-gray-400 hover:text-white transition-colors"
+            className="p-1 rounded-lg text-gray-400 hover:text-white transition-colors"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -77,18 +104,24 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
         <div className="flex-1 px-2 sm:px-4 py-4 sm:py-6 space-y-1">
           <p className="px-2 sm:px-4 text-[8px] sm:text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-3 sm:mb-4">Main Menu</p>
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className="w-full flex items-center space-x-2 sm:space-x-3 px-2 sm:px-4 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl transition-all duration-300 group text-gray-400 hover:text-white hover:bg-white/5"
-            >
-              <span className="transition-colors duration-300 text-gray-500 group-hover:text-white">
-                {item.icon}
-              </span>
-              <span className="font-bold uppercase tracking-widest text-[9px] sm:text-[11px]">{item.name}</span>
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const isActive = activeSection === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`w-full flex items-center space-x-2 sm:space-x-3 px-2 sm:px-4 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl transition-all duration-300 group ${isActive
+                  ? 'bg-[#4a9d7e]/10 text-white border border-[#4a9d7e]/20 shadow-[0_0_15px_rgba(74,157,126,0.1)]'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                  }`}
+              >
+                <span className={`transition-colors duration-300 ${isActive ? 'text-[#4a9d7e]' : 'text-gray-500 group-hover:text-white'}`}>
+                  {item.icon}
+                </span>
+                <span className="font-bold uppercase tracking-widest text-[9px] sm:text-[11px]">{item.name}</span>
+              </button>
+            );
+          })}
         </div>
 
         <div className="p-3 sm:p-4 md:p-6 border-t border-gray-800/50">
@@ -116,7 +149,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="md:hidden p-1.5 sm:p-2 rounded-lg bg-gray-800/50 text-gray-400 hover:text-white transition-colors"
+              className="p-1.5 sm:p-2 rounded-lg bg-gray-800/50 text-gray-400 hover:text-white transition-colors"
             >
               <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
