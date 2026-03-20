@@ -8,6 +8,7 @@ import { useModal } from '../auth/ModalContext';
 export default function AboutNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeItem, setActiveItem] = useState('');
   const { openSignup } = useModal();
 
   useEffect(() => {
@@ -17,6 +18,18 @@ export default function AboutNavbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: { name: string, href: string }) => {
+    setActiveItem(item.name);
+    if (item.href.startsWith('#')) {
+      e.preventDefault();
+      const element = document.querySelector(item.href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    setIsMenuOpen(false);
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -31,12 +44,11 @@ export default function AboutNavbar() {
   ];
 
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-[#1a1d29]/80 backdrop-blur-lg border-b border-gray-800/50 py-3' 
-          : 'bg-transparent py-6'
-      }`}
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+        ? 'bg-[#1a1d29]/80 backdrop-blur-lg border-b border-gray-800/50 py-3'
+        : 'bg-transparent py-6'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
@@ -63,7 +75,12 @@ export default function AboutNavbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`text-gray-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg transition-all duration-200 text-sm font-bold uppercase tracking-widest ${item.name === 'Home' ? 'text-[#4a9d7e]' : ''}`}
+                  prefetch={item.href === '/' ? true : undefined}
+                  onClick={(e) => handleNavClick(e, item)}
+                  className={`px-3 lg:px-4 py-2 rounded-lg transition-all duration-200 text-base font-semibold ${activeItem === item.name
+                    ? 'bg-white/10 text-[#4a9d7e] shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
                 >
                   {item.name}
                 </Link>
@@ -72,7 +89,7 @@ export default function AboutNavbar() {
             <div className="h-6 w-px bg-gray-800 mx-4" />
             <button
               onClick={openSignup}
-              className="bg-[#4a9d7e] hover:bg-[#3d8567] text-white px-6 py-2.5 rounded-xl text-sm font-bold uppercase tracking-widest transition-all duration-300 shadow-[0_0_15px_rgba(74,157,126,0.2)] hover:shadow-[0_0_20px_rgba(74,157,126,0.4)]"
+              className="bg-[#4a9d7e] hover:bg-[#3d8567] text-white px-5 lg:px-6 py-2.5 rounded-lg lg:rounded-xl text-base font-bold transition-all duration-300 shadow-[0_0_15px_rgba(74,157,126,0.2)] hover:shadow-[0_0_20px_rgba(74,157,126,0.4)]"
             >
               Get Started
             </button>
@@ -107,8 +124,11 @@ export default function AboutNavbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`text-gray-400 hover:text-white hover:bg-gray-800 block px-4 py-4 rounded-xl text-base font-bold uppercase tracking-widest transition-all duration-200 ${item.name === 'Home' ? 'text-[#4a9d7e]' : ''}`}
-                onClick={() => setIsMenuOpen(false)}
+                className={`block px-4 py-4 rounded-xl text-lg font-semibold transition-all duration-200 ${activeItem === item.name
+                  ? 'bg-white/10 text-[#4a9d7e]'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                  }`}
+                onClick={(e) => handleNavClick(e, item)}
               >
                 {item.name}
               </Link>
@@ -116,7 +136,7 @@ export default function AboutNavbar() {
             <div className="pt-4 border-t border-gray-800 flex flex-col space-y-3">
               <button
                 onClick={() => { openSignup(); setIsMenuOpen(false); }}
-                className="bg-[#4a9d7e] text-white block px-4 py-4 rounded-xl text-base font-bold uppercase tracking-widest text-center"
+                className="bg-[#4a9d7e] text-white block px-4 py-4 rounded-xl text-lg font-bold text-center"
               >
                 Get Started
               </button>

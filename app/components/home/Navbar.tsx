@@ -8,6 +8,7 @@ import { useModal } from '../auth/ModalContext';
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeItem, setActiveItem] = useState('');
   const { openSignup } = useModal();
 
   useEffect(() => {
@@ -17,6 +18,18 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: { name: string, href: string }) => {
+    setActiveItem(item.name);
+    if (item.href.startsWith('#')) {
+      e.preventDefault();
+      const element = document.querySelector(item.href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    setIsMenuOpen(false);
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -33,8 +46,8 @@ export default function Navbar() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? 'bg-[#1a1d29]/80 backdrop-blur-lg border-b border-gray-800/50 py-3'
-          : 'bg-transparent py-6'
+        ? 'bg-[#1a1d29]/80 backdrop-blur-lg border-b border-gray-800/50 py-3'
+        : 'bg-transparent py-6'
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,7 +75,11 @@ export default function Navbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-gray-400 hover:text-white hover:bg-white/5 px-2 lg:px-4 py-2 rounded-lg transition-all duration-200 text-xs lg:text-sm font-bold uppercase tracking-widest"
+                  onClick={(e) => handleNavClick(e, item)}
+                  className={`px-3 lg:px-4 py-2 rounded-lg transition-all duration-200 text-base font-semibold ${activeItem === item.name
+                    ? 'bg-white/10 text-[#4a9d7e] shadow-sm'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
                 >
                   {item.name}
                 </Link>
@@ -71,13 +88,13 @@ export default function Navbar() {
             <div className="h-6 w-px bg-gray-800 mx-2 lg:mx-4" />
             <button
               onClick={openSignup}
-              className="text-gray-300 hover:text-white transition-all duration-200 text-xs lg:text-sm font-bold uppercase tracking-widest px-2 lg:px-4 py-2"
+              className="text-gray-300 hover:text-white transition-all duration-200 text-base font-semibold px-3 lg:px-4 py-2"
             >
               Login
             </button>
             <button
               onClick={openSignup}
-              className="bg-[#4a9d7e] hover:bg-[#3d8567] text-white px-4 lg:px-6 py-2.5 rounded-lg lg:rounded-xl text-xs lg:text-sm font-bold uppercase tracking-widest transition-all duration-300 shadow-[0_0_15px_rgba(74,157,126,0.2)] hover:shadow-[0_0_20px_rgba(74,157,126,0.4)]"
+              className="bg-[#4a9d7e] hover:bg-[#3d8567] text-white px-5 lg:px-6 py-2.5 rounded-lg lg:rounded-xl text-base font-bold transition-all duration-300 shadow-[0_0_15px_rgba(74,157,126,0.2)] hover:shadow-[0_0_20px_rgba(74,157,126,0.4)]"
             >
               Get Started
             </button>
@@ -112,8 +129,11 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-400 hover:text-white hover:bg-gray-800 block px-4 py-4 rounded-xl text-base font-bold uppercase tracking-widest transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
+                className={`block px-4 py-4 rounded-xl text-lg font-semibold transition-all duration-200 ${activeItem === item.name
+                  ? 'bg-white/10 text-[#4a9d7e]'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                  }`}
+                onClick={(e) => handleNavClick(e, item)}
               >
                 {item.name}
               </Link>
@@ -121,13 +141,13 @@ export default function Navbar() {
             <div className="pt-4 border-t border-gray-800 flex flex-col space-y-3">
               <button
                 onClick={() => { openSignup(); setIsMenuOpen(false); }}
-                className="text-gray-300 hover:text-white block px-4 py-4 text-base font-bold uppercase tracking-widest text-left"
+                className="text-gray-300 hover:text-white block px-4 py-4 text-lg font-semibold text-left"
               >
                 Login
               </button>
               <button
                 onClick={() => { openSignup(); setIsMenuOpen(false); }}
-                className="bg-[#4a9d7e] text-white block px-4 py-4 rounded-xl text-base font-bold uppercase tracking-widest text-center"
+                className="bg-[#4a9d7e] text-white block px-4 py-4 rounded-xl text-lg font-bold text-center"
               >
                 Get Started
               </button>

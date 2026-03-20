@@ -118,7 +118,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <span className={`transition-colors duration-300 ${isActive ? 'text-[#4a9d7e]' : 'text-gray-500 group-hover:text-white'}`}>
                   {item.icon}
                 </span>
-                <span className="font-bold uppercase tracking-widest text-[9px] sm:text-[11px]">{item.name}</span>
+                <span className="font-semibold text-[13px] sm:text-[15px] tracking-wide">{item.name}</span>
               </button>
             );
           })}
@@ -134,7 +134,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               Connected to Institutional Node <span className="text-white">#0482</span>
             </p>
           </div>
-          <button className="w-full flex items-center justify-center space-x-1 sm:space-x-2 bg-gray-800/50 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 border border-transparent text-gray-400 px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl font-bold uppercase tracking-widest text-[9px] sm:text-[11px] transition-all duration-300">
+          <button className="w-full flex items-center justify-center space-x-1 sm:space-x-2 bg-gray-800/50 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 border border-transparent text-gray-400 px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl font-semibold text-[13px] sm:text-[15px] tracking-wide transition-all duration-300">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
