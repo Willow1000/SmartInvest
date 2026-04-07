@@ -17,40 +17,40 @@ export default function AboutHero() {
       title: "Welcome to",
       titleHighlight: "SmartInvest",
       description: "For over a decade, we've been at the forefront of financial innovation. We've protected and empowered thousands of traders with institutional-grade security, advanced tools, and unwavering commitment to excellence.",
-      cta1: "Explore Our Mission",
-      cta1Link: "#mission",
-      cta2: "Meet the Team",
-      cta2Link: "#team"
+      cta1: "",
+      cta1Link: "",
+      cta2: "",
+      cta2Link: ""
     },
     {
       badge: "Our Mission",
       title: "Democratizing",
       titleHighlight: "Access to Markets",
       description: "We believe everyone deserves access to the same sophisticated trading and investment tools as the world's largest institutions. SmartInvest was built on this principle—breaking down barriers and empowering individual investors globally.",
-      cta1: "Join Our Community",
-      cta1Link: "/",
-      cta2: "Learn More",
-      cta2Link: "/about#partners"
+      cta1: "",
+      cta1Link: "",
+      cta2: "",
+      cta2Link: ""
     },
     {
       badge: "Our Values",
       title: "Built on",
       titleHighlight: "Trust & Innovation",
       description: "With international licenses, institutional-grade security, and a proven track record spanning over a decade, we've earned the trust of 50,000+ traders worldwide. Security, transparency, and innovation drive everything we do.",
-      cta1: "Discover Our Values",
-      cta1Link: "#values",
-      cta2: "See Our Achievements",
-      cta2Link: "#achievements"
+      cta1: "",
+      cta1Link: "",
+      cta2: "",
+      cta2Link: ""
     },
     {
       badge: "Global Reach",
       title: "Serving Traders",
       titleHighlight: "Across the World",
       description: "From LATAM to Asia, Europe to North America—SmartInvest is where traders of all experience levels come to invest smarter, grow their wealth, and achieve their financial goals with confidence.",
-      cta1: "Start Your Journey",
-      cta1Link: "/",
-      cta2: "Explore Opportunities",
-      cta2Link: "/#features"
+      cta1: "",
+      cta1Link: "",
+      cta2: "",
+      cta2Link: ""
     }
   ];
 
@@ -243,45 +243,6 @@ export default function AboutHero() {
               <p className="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto mb-12 leading-relaxed animate-fade-in delay-200">
                 {s.description}
               </p>
-              
-              <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-in delay-300">
-                {s.cta1Link ? (
-                  <a
-                    href={s.cta1Link}
-                    className="w-full sm:w-auto bg-[#4a9d7e] hover:bg-[#3d8567] text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-[0_0_20px_rgba(74,157,126,0.3)] hover:shadow-[0_0_30px_rgba(74,157,126,0.5)] text-center group inline-flex items-center justify-center"
-                  >
-                    {s.cta1}
-                    <svg className="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </a>
-                ) : (
-                  <button
-                    onClick={openSignup}
-                    className="w-full sm:w-auto bg-[#4a9d7e] hover:bg-[#3d8567] text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-[0_0_20px_rgba(74,157,126,0.3)] hover:shadow-[0_0_30px_rgba(74,157,126,0.5)] text-center group"
-                  >
-                    {s.cta1}
-                    <svg className="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </button>
-                )}
-                {s.cta2Link ? (
-                  <a
-                    href={s.cta2Link}
-                    className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white border border-white/10 px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 backdrop-blur-sm text-center"
-                  >
-                    {s.cta2}
-                  </a>
-                ) : (
-                  <button
-                    onClick={openSignup}
-                    className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white border border-white/10 px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 backdrop-blur-sm text-center"
-                  >
-                    {s.cta2}
-                  </button>
-                )}
-              </div>
             </div>
           ))}
         </div>

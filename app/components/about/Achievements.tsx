@@ -6,11 +6,30 @@ export default function Achievements() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
+  const [metrics, setMetrics] = useState({
+    aum: 2.40,
+    uptime: 99.90,
+    execution: 12,
+    traders: 50431
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMetrics(prev => ({
+        aum: prev.aum + (Math.random() * 0.005),
+        uptime: 99.90 + (Math.random() * 0.09),
+        execution: 8 + Math.floor(Math.random() * 7), // 8-14ms
+        traders: prev.traders + Math.floor(Math.random() * 3)
+      }));
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
   const stats = [
-    { label: 'AUM', value: '$2.4B+' },
-    { label: 'Uptime', value: '99.9%' },
-    { label: 'Execution', value: '12ms' },
-    { label: 'Traders', value: '50k+' },
+    { label: 'AUM', value: `$${metrics.aum.toFixed(2)}B+` },
+    { label: 'Uptime', value: `${metrics.uptime.toFixed(2)}%` },
+    { label: 'Execution', value: `${metrics.execution}ms` },
+    { label: 'Traders', value: `${(metrics.traders / 1000).toFixed(1)}k+` },
     { label: 'Awards', value: '15+' },
     { label: 'Global Offices', value: '12' }
   ];
@@ -43,15 +62,15 @@ export default function Achievements() {
           <h2 className="text-[#4a9d7e] text-sm font-bold tracking-[0.2em] uppercase mb-4">Our Progress</h2>
           <h3 className="text-3xl md:text-5xl font-bold text-white mb-6">A History of Excellence</h3>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            From our founding to our global presence today, we've consistently 
+            From our founding to our global presence today, we've consistently
             set new standards in digital asset management.
           </p>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-6 gap-8 mb-24">
           {stats.map((stat, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className={`flex flex-col items-center group transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
               style={{ transitionDelay: `${i * 100}ms` }}
             >
@@ -71,20 +90,20 @@ export default function Achievements() {
             { year: '2020', title: 'Global Expansion', desc: 'Opened offices in Singapore and New York to serve institutional clients.' },
             { year: '2024', title: 'Market Leader', desc: 'Ranked #1 for execution speed and algorithmic transparency.' }
           ].map((milestone, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className={`group relative bg-[#252836]/30 backdrop-blur-sm border border-gray-800 p-10 rounded-3xl transition-all duration-1000 hover:border-[#4a9d7e]/40 hover:-translate-y-2 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
               style={{ transitionDelay: `${i * 300}ms` }}
             >
               {/* Animated Glow */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#4a9d7e]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-3xl" />
-              
+
               <div className="text-[#4a9d7e] text-2xl font-bold mb-4 transform group-hover:scale-110 transition-transform duration-500">{milestone.year}</div>
               <h4 className="text-white text-xl font-bold mb-4 group-hover:text-white transition-colors">{milestone.title}</h4>
               <p className="text-gray-500 text-sm leading-relaxed relative z-10">{milestone.desc}</p>
-              
+
               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-all duration-700">
-                <div className="text-6xl font-extrabold text-white">0{i+1}</div>
+                <div className="text-6xl font-extrabold text-white">0{i + 1}</div>
               </div>
             </div>
           ))}
