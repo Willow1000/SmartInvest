@@ -122,7 +122,6 @@ export default function Features() {
               className={`group relative bg-[#252836]/40 backdrop-blur-sm rounded-2xl p-8 md:p-10 border border-gray-800 hover:border-[#4a9d7e]/50 transition-all duration-1000 hover:-translate-y-2 overflow-hidden ${
                 isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
               }`}
-              style={{ transitionDelay: `${index * 200}ms` }}
             >
               {/* Card background glow */}
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#4a9d7e]/5 rounded-full blur-[60px] group-hover:bg-[#4a9d7e]/10 transition-all duration-500" />

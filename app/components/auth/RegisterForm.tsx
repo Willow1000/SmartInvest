@@ -65,10 +65,35 @@ export default function SignupModal() {
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Registration successful! Our institutional team will contact you shortly.');
-    closeSignup();
+    
+    // Validate all required fields are filled
+    if (step !== 3) {
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/auth/institutional-signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('Application submitted successfully! Our institutional team will contact you within 24 hours.');
+        closeSignup();
+      } else {
+        alert(result.message || 'Failed to submit application');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      alert('An error occurred while submitting your application');
+    }
   };
 
   const progress = (step / 3) * 100;
@@ -82,7 +107,7 @@ export default function SignupModal() {
       />
 
       {/* Modal Container - Narrower on large screens */}
-      <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-md bg-[#252836] border border-gray-800 rounded-[2.5rem] shadow-2xl overflow-hidden animate-scale-up">
+      <div className="relative w-full max-w-sm lg:max-w-md xl:max-w-sm bg-[#252836] border border-gray-800 rounded-[2.5rem] shadow-2xl overflow-hidden animate-scale-up">
         {/* Close Button */}
         <button 
           onClick={closeSignup}

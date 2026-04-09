@@ -129,9 +129,8 @@ export default function WithdrawModal() {
       // - Crypto: Coinbase, BitPay
       // - PayPal: PayPal Payouts API
       
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-      
-      const success = addTransaction(amount, 'withdrawal');
+      // Call the async addTransaction function
+      const success = await addTransaction(amount, 'withdrawal');
 
       if (success) {
         setWithdrawAmount('');
@@ -170,7 +169,7 @@ export default function WithdrawModal() {
       <div className="fixed inset-0" onClick={handleClose} />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-lg bg-[#252836] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden animate-scale-up">
+      <div className="relative w-full max-w-md lg:max-w-lg bg-[#252836] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden animate-scale-up">
         {/* Background Glow */}
         <div className="absolute -top-24 -right-24 w-64 h-64 bg-orange-500/10 rounded-full blur-[100px] pointer-events-none" />
 

@@ -229,14 +229,14 @@ export default function Hero() {
   const slide = slides[currentSlide];
 
   return (
-    <section className="relative overflow-hidden bg-[#1a1d29] pt-16 sm:pt-20 md:pt-24 pb-12 sm:pb-16 md:pb-32 px-3 sm:px-4 lg:px-8 min-h-screen flex items-center">
+    <section className="relative overflow-hidden bg-[#1a1d29] pt-16 sm:pt-20 md:pt-24 pb-12 sm:pb-16 md:pb-32 px-3 sm:px-4 lg:px-8 min-h-screen flex items-center max-w-full">
       {/* Video Background */}
       <video
         autoPlay
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover opacity-40"
+        className="absolute inset-0 w-full h-full min-h-screen object-cover opacity-40"
       >
         <source src="/Financial_Video_Generation_Request.webm" type="video/webm" />
         Your browser does not support the video tag.
@@ -245,7 +245,7 @@ export default function Hero() {
       {/* Fallback Canvas Background */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full pointer-events-none opacity-50"
+        className="absolute inset-0 w-full h-full min-h-screen pointer-events-none opacity-50"
       />
 
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none overflow-hidden z-0">
@@ -298,15 +298,15 @@ export default function Hero() {
             </svg>
           </button>
 
-          {/* Dot Indicators */}
+              {/* Dot Indicators */}
           <div className="flex gap-1.5 sm:gap-2">
             {slides.map((_, index) => (
               <button
                 key={index}
                 onClick={() => handleDotClick(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 touch-target ${
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
                   index === currentSlide
-                    ? 'bg-[#4a9d7e] w-6 sm:w-8'
+                    ? 'bg-[#4a9d7e] w-6'
                     : 'bg-gray-600 hover:bg-gray-500'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}

@@ -19,88 +19,92 @@ export default function NewsModal() {
 
   return (
     <>
-      {/* Backdrop - Subtle, non-blocking */}
+      {/* Main Modal Container */}
       <div 
-        className="fixed inset-0 bg-black/20 backdrop-blur-[2px] animate-fade-in pointer-events-none"
-      />
-
-      {/* Floating News Panel - Fixed position, doesn't block interaction */}
-      <div className="fixed top-4 right-4 w-96 max-w-[calc(100vw-2rem)] bg-[#252836] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden animate-slide-in-right z-[90] max-h-[calc(100vh-2rem)] flex flex-col">
-        {/* Header */}
-        <div className="relative p-4 border-b border-gray-800/50 flex items-center justify-between">
-          <div className="flex items-center space-x-3 flex-1 min-w-0">
-            <span className="text-[#4a9d7e] text-[9px] font-bold uppercase tracking-[0.2em] px-2 py-1 bg-[#4a9d7e]/10 rounded-md border border-[#4a9d7e]/20 flex-shrink-0">
-              {selectedNews.category}
-            </span>
-            <span className="text-gray-500 text-[9px] font-bold uppercase tracking-widest flex-shrink-0">
-              {selectedNews.timestamp}
-            </span>
-          </div>
-          
-          {/* Close Button */}
-          <button 
-            onClick={closeNews}
-            className="text-gray-500 hover:text-white transition-colors p-1.5 bg-gray-800/50 rounded-lg flex-shrink-0"
-            title="Close news panel"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Content - Scrollable */}
-        <div className="flex-1 p-4 overflow-y-auto custom-scrollbar">
-          {/* Title */}
-          <h2 className="text-lg font-bold text-white leading-tight tracking-tight mb-3">
-            {selectedNews.title}
-          </h2>
-
-          {/* Excerpt */}
-          <div className="mb-4">
-            <p className="text-gray-300 leading-relaxed text-sm">
-              {selectedNews.excerpt}
-            </p>
-          </div>
-
-          {/* Full Content */}
-          <div className="space-y-3">
-            {content.map((paragraph, index) => (
-              <p key={index} className="text-gray-400 leading-relaxed text-xs">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-
-          {/* Additional Info */}
-          <div className="mt-4 p-3 bg-[#1a1d29]/40 rounded-xl border border-gray-800/50">
-            <div className="flex items-center space-x-2 mb-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#4a9d7e] animate-pulse" />
-              <span className="text-[#4a9d7e] text-[9px] font-bold uppercase tracking-widest">Market Intelligence</span>
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+        onClick={closeNews}
+      >
+        {/* Modal Content Panel - prevents click from closing when clicking inside */}
+        <div 
+          className="relative w-full max-w-sm mx-4 bg-[#0a0c10] border border-gray-800 rounded-xl shadow-2xl overflow-hidden animate-slide-in-right"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="relative p-4 border-b border-gray-800/50 flex items-center justify-between">
+            <div className="flex items-center space-x-3 flex-1 min-w-0">
+              <span className="text-[#4a9d7e] text-[9px] font-bold uppercase tracking-[0.2em] px-2 py-1 bg-[#4a9d7e]/10 rounded-md border border-[#4a9d7e]/20 flex-shrink-0">
+                {selectedNews.category}
+              </span>
+              <span className="text-gray-500 text-[9px] font-bold uppercase tracking-widest flex-shrink-0">
+                {selectedNews.timestamp}
+              </span>
             </div>
-            <p className="text-gray-500 text-xs leading-relaxed">
-              This analysis is based on real-time institutional data feeds and advanced AI-driven sentiment analysis.
-            </p>
-          </div>
-        </div>
-
-        {/* Footer Actions */}
-        <div className="p-4 border-t border-gray-800/50">
-          <div className="flex gap-2">
+            
+            {/* Close Button */}
             <button 
               onClick={closeNews}
-              className="flex-1 bg-[#4a9d7e] hover:bg-[#3d8567] text-white font-bold py-2.5 rounded-lg transition-all duration-300 uppercase tracking-widest text-[10px]"
+              className="text-gray-500 hover:text-white transition-colors p-1.5 bg-gray-800/50 rounded-lg flex-shrink-0"
+              title="Close news panel"
             >
-              Close
-            </button>
-            <button className="flex-1 bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700 hover:border-gray-600 text-white font-bold py-2.5 rounded-lg transition-all duration-300 uppercase tracking-widest text-[10px]">
-              Share
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           </div>
-        </div>
 
-        {/* Drag Handle (optional visual indicator) */}
-        <div className="absolute top-0 left-0 w-1 h-full bg-[#4a9d7e]/30 hover:bg-[#4a9d7e]/50 transition-colors cursor-ew-resize" />
+          {/* Content - Scrollable */}
+          <div className="flex-1 p-4 overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+            {/* Title */}
+            <h2 className="text-lg font-bold text-white leading-tight tracking-tight mb-3">
+              {selectedNews.title}
+            </h2>
+
+            {/* Excerpt */}
+            <div className="mb-4">
+              <p className="text-gray-300 leading-relaxed text-sm">
+                {selectedNews.excerpt}
+              </p>
+            </div>
+
+            {/* Full Content */}
+            <div className="space-y-3">
+              {content.map((paragraph, index) => (
+                <p key={index} className="text-gray-400 leading-relaxed text-xs">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+
+            {/* Additional Info */}
+            <div className="mt-4 p-3 bg-[#1a1d29]/40 rounded-xl border border-gray-800/50">
+              <div className="flex items-center space-x-2 mb-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#4a9d7e] animate-pulse" />
+                <span className="text-[#4a9d7e] text-[9px] font-bold uppercase tracking-widest">Market Intelligence</span>
+              </div>
+              <p className="text-gray-500 text-xs leading-relaxed">
+                This analysis is based on real-time institutional data feeds and advanced AI-driven sentiment analysis.
+              </p>
+            </div>
+          </div>
+
+          {/* Footer Actions */}
+          <div className="p-4 border-t border-gray-800/50">
+            <div className="flex gap-2">
+              <button 
+                onClick={closeNews}
+                className="flex-1 bg-[#4a9d7e] hover:bg-[#3d8567] text-white font-bold py-2.5 rounded-lg transition-all duration-300 uppercase tracking-widest text-[10px]"
+              >
+                Close
+              </button>
+              <button className="flex-1 bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700 hover:border-gray-600 text-white font-bold py-2.5 rounded-lg transition-all duration-300 uppercase tracking-widest text-[10px]">
+                Share
+              </button>
+            </div>
+          </div>
+
+          {/* Drag Handle (optional visual indicator) */}
+          <div className="absolute top-0 left-0 w-1 h-full bg-[#4a9d7e]/30 hover:bg-[#4a9d7e]/50 transition-colors cursor-ew-resize" />
+        </div>
       </div>
 
       {/* Add custom animation for slide-in effect */}
@@ -118,6 +122,25 @@ export default function NewsModal() {
         
         .animate-slide-in-right {
           animation: slide-in-right 0.3s ease-out;
+        }
+
+        /* Custom scrollbar styling */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #1a1d29;
+          border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #4a9d7e;
+          border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #3d8567;
         }
       `}</style>
     </>

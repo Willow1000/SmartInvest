@@ -53,6 +53,9 @@ interface ModalContextType {
   isSignupOpen: boolean;
   openSignup: () => void;
   closeSignup: () => void;
+  isLoginOpen: boolean;
+  openLogin: () => void;
+  closeLogin: () => void;
   
   // News Modals
   isNewsOpen: boolean;
@@ -85,6 +88,7 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export function ModalProvider({ children }: { children: ReactNode }) {
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isNewsOpen, setIsNewsOpen] = useState(false);
   const [selectedNews, setSelectedNews] = useState<NewsInsight | null>(null);
   const [isDepositOpen, setIsDepositOpen] = useState(false);
@@ -133,6 +137,9 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   const openSignup = () => setIsSignupOpen(true);
   const closeSignup = () => setIsSignupOpen(false);
 
+  const openLogin = () => setIsLoginOpen(true);
+  const closeLogin = () => setIsLoginOpen(false);
+
   const openNews = (news: NewsInsight) => {
     setSelectedNews(news);
     setIsNewsOpen(true);
@@ -148,7 +155,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   const openWithdraw = () => setIsWithdrawOpen(true);
   const closeWithdraw = () => setIsWithdrawOpen(false);
 
-  const addTransaction = useCallback((amount: number, type: 'deposit' | 'withdrawal'): boolean => {
+  const addTransaction = useCallback(async (amount: number, type: 'deposit' | 'withdrawal'): Promise<boolean> => {
     // Validate amount
     if (isNaN(amount) || amount <= 0) {
       console.error('Invalid amount:', amount);
@@ -161,43 +168,67 @@ export function ModalProvider({ children }: { children: ReactNode }) {
       return false;
     }
 
-    // Create new transaction
-    const now = new Date();
-    const timestamp = now.toLocaleString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    }).replace(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+)/, '$3-$1-$2 $4:$5');
+    try {
+      const response = await fetch('/api/portfolio/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type,
+          amount,
+          method: type === 'deposit' ? 'Bank Transfer' : 'Instant Withdrawal'
+        }),
+      });
 
-    const newTx: Transaction = {
-      id: `tx-${Date.now()}`,
-      type,
-      amount,
-      status: 'completed',
-      timestamp,
-      method: type === 'deposit' ? 'Bank Transfer' : 'Instant Withdrawal',
-    };
+      const result = await response.json();
 
-    // Update transactions
-    setTransactions(prev => [newTx, ...prev]);
+      if (result.success) {
+        // Update local state to reflect the change
+        const now = new Date();
+        const timestamp = now.toLocaleString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }).replace(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+)/, '$3-$1-$2 $4:$5');
 
-    // Update balance
-    if (type === 'deposit') {
-      setBalance(prev => prev + amount);
-    } else {
-      setBalance(prev => prev - amount);
+        const newTx: Transaction = {
+          id: result.transaction.id || `tx-${Date.now()}`,
+          type,
+          amount,
+          status: 'completed',
+          timestamp,
+          method: type === 'deposit' ? 'Bank Transfer' : 'Instant Withdrawal',
+        };
+
+        // Update local state
+        setTransactions(prev => [newTx, ...prev]);
+        
+        if (type === 'deposit') {
+          setBalance(prev => prev + amount);
+        } else {
+          setBalance(prev => prev - amount);
+        }
+
+        return true;
+      } else {
+        console.error('Transaction failed:', result.message);
+        return false;
+      }
+    } catch (error) {
+      console.error('Transaction error:', error);
+      return false;
     }
-
-    return true;
   }, [balance]);
 
   return (
     <ModalContext.Provider 
       value={{ 
         isSignupOpen, openSignup, closeSignup,
+        isLoginOpen, openLogin, closeLogin,
         isNewsOpen, selectedNews, openNews, closeNews,
         isDepositOpen, openDeposit, closeDeposit,
         isWithdrawOpen, openWithdraw, closeWithdraw,

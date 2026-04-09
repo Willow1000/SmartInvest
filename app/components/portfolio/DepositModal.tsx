@@ -128,35 +128,29 @@ export default function DepositModal() {
       return;
     }
 
-    // Step 3 - Final confirmation
-    setIsProcessing(true);
+    if (step === 3) {
+      setIsProcessing(true);
+      setError('');
 
-    // Simulate API integration with payment providers
-    try {
-      // API calls would go here:
-      // - Visa/Mastercard: Stripe, Adyen, etc.
-      // - PayPal: PayPal SDK
-      // - Crypto: Coinbase Commerce, BitPay
-      // - Bank: Plaid, Stripe ACH
-      
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-      
-      const success = addTransaction(amount, 'deposit');
+      try {
+        // Call the async addTransaction function
+        const success = await addTransaction(amount, 'deposit');
 
-      if (success) {
-        setDepositAmount('');
-        setStep(1);
-        setIsProcessing(false);
-        setTimeout(() => {
-          closeDeposit();
-        }, 1000);
-      } else {
-        setError('Transaction failed. Please try again.');
+        if (success) {
+          setDepositAmount('');
+          setStep(1);
+          setIsProcessing(false);
+          setTimeout(() => {
+            closeDeposit();
+          }, 1000);
+        } else {
+          setError('Transaction failed. Please try again.');
+          setIsProcessing(false);
+        }
+      } catch (err) {
+        setError('Payment processing failed. Please try again.');
         setIsProcessing(false);
       }
-    } catch (err) {
-      setError('Payment processing failed. Please try again.');
-      setIsProcessing(false);
     }
   };
 
@@ -180,7 +174,7 @@ export default function DepositModal() {
       <div className="fixed inset-0" onClick={handleClose} />
 
       {/* Modal Container */}
-      <div className="relative w-full max-w-lg bg-[#252836] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden animate-scale-up">
+      <div className="relative w-full max-w-md lg:max-w-lg bg-[#252836] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden animate-scale-up">
         {/* Background Glow */}
         <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#4a9d7e]/10 rounded-full blur-[100px] pointer-events-none" />
 
@@ -261,15 +255,15 @@ export default function DepositModal() {
 
                 {/* Quick Amount Buttons */}
                 <div className="flex gap-2">
-                  {[100, 500, 1000, 5000].map((amount) => (
+                  {[100, 500, 1000, 5000].map((quickAmount) => (
                     <button
-                      key={amount}
+                      key={quickAmount}
                       type="button"
-                      onClick={() => setDepositAmount(amount.toString())}
+                      onClick={() => setDepositAmount(quickAmount.toString())}
                       disabled={isProcessing}
                       className="flex-1 bg-gray-800/50 hover:bg-[#4a9d7e]/20 border border-gray-700 hover:border-[#4a9d7e]/50 text-gray-400 hover:text-white py-2 rounded-lg transition-all duration-300 text-sm font-bold disabled:opacity-50"
                     >
-                      ${amount}
+                      ${quickAmount}
                     </button>
                   ))}
                 </div>

@@ -9,7 +9,7 @@ export default function AboutNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeItem, setActiveItem] = useState('');
-  const { openSignup } = useModal();
+  const { openSignup, openLogin } = useModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,6 +88,12 @@ export default function AboutNavbar() {
             </div>
             <div className="h-6 w-px bg-gray-800 mx-4" />
             <button
+              onClick={openLogin}
+              className="text-gray-300 hover:text-white transition-all duration-200 text-base font-semibold px-3 lg:px-4 py-2"
+            >
+              Login
+            </button>
+            <button
               onClick={openSignup}
               className="bg-[#4a9d7e] hover:bg-[#3d8567] text-white px-5 lg:px-6 py-2.5 rounded-lg lg:rounded-xl text-base font-bold transition-all duration-300 shadow-[0_0_15px_rgba(74,157,126,0.2)] hover:shadow-[0_0_20px_rgba(74,157,126,0.4)]"
             >
@@ -134,6 +140,12 @@ export default function AboutNavbar() {
               </Link>
             ))}
             <div className="pt-4 border-t border-gray-800 flex flex-col space-y-3">
+              <button
+                onClick={() => { openLogin(); setIsMenuOpen(false); }}
+                className="text-gray-300 hover:text-white block px-4 py-4 text-lg font-semibold text-left"
+              >
+                Login
+              </button>
               <button
                 onClick={() => { openSignup(); setIsMenuOpen(false); }}
                 className="bg-[#4a9d7e] text-white block px-4 py-4 rounded-xl text-lg font-bold text-center"

@@ -73,8 +73,73 @@ export default function Performance() {
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
   const [selectedMetric, setSelectedMetric] = useState('all');
   const [isAnimating, setIsAnimating] = useState(false);
+  const [optimalHeight, setOptimalHeight] = useState(450);
   const sectionRef = useRef<HTMLElement>(null);
   const animationRef = useRef<number>();
+
+  // Dynamic height calculation based on screen size
+  useEffect(() => {
+    const calculateOptimalHeight = () => {
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      
+      // Comprehensive screen size coverage for all devices
+      if (screenWidth < 375) {
+        // Very small mobile (iPhone SE, etc.): Use 35% of screen height, max 250px
+        setOptimalHeight(Math.min(screenHeight * 0.35, 250));
+      } else if (screenWidth < 414) {
+        // Small mobile (iPhone 12/13 mini): Use 38% of screen height, max 280px
+        setOptimalHeight(Math.min(screenHeight * 0.38, 280));
+      } else if (screenWidth < 480) {
+        // Medium mobile (iPhone 12/13, Android small): Use 40% of screen height, max 300px
+        setOptimalHeight(Math.min(screenHeight * 0.40, 300));
+      } else if (screenWidth < 568) {
+        // Large mobile (iPhone 14 Plus, Android large): Use 42% of screen height, max 320px
+        setOptimalHeight(Math.min(screenHeight * 0.42, 320));
+      } else if (screenWidth < 640) {
+        // Extra large mobile (Samsung Galaxy, etc.): Use 45% of screen height, max 350px
+        setOptimalHeight(Math.min(screenHeight * 0.45, 350));
+      } else if (screenWidth < 768) {
+        // Small tablet (iPad mini, Surface Go): Use 48% of screen height, max 380px
+        setOptimalHeight(Math.min(screenHeight * 0.48, 380));
+      } else if (screenWidth < 834) {
+        // Medium tablet (iPad, Surface): Use 52% of screen height, max 420px
+        setOptimalHeight(Math.min(screenHeight * 0.52, 420));
+      } else if (screenWidth < 912) {
+        // Large tablet (iPad Pro 11"): Use 55% of screen height, max 460px
+        setOptimalHeight(Math.min(screenHeight * 0.55, 460));
+      } else if (screenWidth < 1024) {
+        // Extra large tablet (iPad Pro 12.9"): Use 58% of screen height, max 480px
+        setOptimalHeight(Math.min(screenHeight * 0.58, 480));
+      } else if (screenWidth < 1280) {
+        // Small desktop/laptop (MacBook Air, etc.): Use 60% of screen height, max 500px
+        setOptimalHeight(Math.min(screenHeight * 0.60, 500));
+      } else if (screenWidth < 1440) {
+        // Medium desktop (MacBook Pro, etc.): Use 62% of screen height, max 520px
+        setOptimalHeight(Math.min(screenHeight * 0.62, 520));
+      } else if (screenWidth < 1536) {
+        // Large desktop (iMac, external monitors): Use 65% of screen height, max 550px
+        setOptimalHeight(Math.min(screenHeight * 0.65, 550));
+      } else if (screenWidth < 1920) {
+        // Extra large desktop (1080p monitors): Use 68% of screen height, max 580px
+        setOptimalHeight(Math.min(screenHeight * 0.68, 580));
+      } else if (screenWidth < 2560) {
+        // Ultra-wide desktop (1440p monitors): Use 70% of screen height, max 600px
+        setOptimalHeight(Math.min(screenHeight * 0.70, 600));
+      } else if (screenWidth < 3840) {
+        // 4K displays: Use 72% of screen height, max 650px
+        setOptimalHeight(Math.min(screenHeight * 0.72, 650));
+      } else {
+        // Ultra-wide and 8K displays: Use 75% of screen height, max 700px
+        setOptimalHeight(Math.min(screenHeight * 0.75, 700));
+      }
+    };
+
+    calculateOptimalHeight();
+    window.addEventListener('resize', calculateOptimalHeight);
+    
+    return () => window.removeEventListener('resize', calculateOptimalHeight);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -152,6 +217,30 @@ export default function Performance() {
   const currentData = chartData[activeTab as keyof typeof chartData];
   const stats = currentData.stats;
 
+  // Filter stats based on selected metric
+  const filteredStats = useMemo(() => {
+    if (selectedMetric === 'all') {
+      return stats;
+    } else if (selectedMetric === 'returns') {
+      return stats.filter(stat => 
+        stat.label.toLowerCase().includes('return') || 
+        stat.label.toLowerCase().includes('roi')
+      );
+    } else if (selectedMetric === 'risk') {
+      return stats.filter(stat => 
+        stat.label.toLowerCase().includes('drawdown') || 
+        stat.label.toLowerCase().includes('sharpe') ||
+        stat.label.toLowerCase().includes('risk')
+      );
+    } else if (selectedMetric === 'volatility') {
+      return stats.filter(stat => 
+        stat.label.toLowerCase().includes('volatility') || 
+        stat.label.toLowerCase().includes('win rate')
+      );
+    }
+    return stats;
+  }, [stats, selectedMetric]);
+
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!isVisible) return;
     
@@ -204,17 +293,20 @@ export default function Performance() {
             </div>
 
             {/* Metric Filter */}
-            <div className="flex bg-[#252836]/50 backdrop-blur-md p-1.5 rounded-2xl border border-gray-800">
+            <div className="relative z-30 flex flex-wrap justify-center bg-[#252836]/50 backdrop-blur-md p-2 sm:p-1.5 rounded-2xl border border-gray-800 gap-1 sm:gap-2">
               {metrics.map((metric) => (
                 <button
                   key={metric}
                   onClick={() => setSelectedMetric(metric)}
-                  className={`px-4 py-3 text-xs font-bold rounded-xl transition-all duration-300 ${selectedMetric === metric
-                    ? 'bg-[#4a9d7e] text-white shadow-lg'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  className={`px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-[10px] sm:text-xs md:text-xs font-bold rounded-lg sm:rounded-xl transition-all duration-300 min-w-[60px] sm:min-w-[70px] md:min-w-[80px] flex-shrink-0 ${
+                    selectedMetric === metric
+                      ? 'bg-[#4a9d7e] text-white shadow-lg scale-105'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5 hover:scale-105'
                     }`}
                 >
-                  {metric === 'all' ? 'All' : metric.charAt(0).toUpperCase() + metric.slice(1)}
+                  <span className="block text-center">
+                    {metric === 'all' ? 'All' : metric.charAt(0).toUpperCase() + metric.slice(1)}
+                  </span>
                 </button>
               ))}
             </div>
@@ -223,7 +315,7 @@ export default function Performance() {
 
         {/* Enhanced Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-12">
-          {stats.map((stat, index) => (
+          {filteredStats.map((stat, index) => (
             <div
               key={index}
               className={`bg-[#252836]/40 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-800 hover:border-gray-700 transition-all duration-1000 hover:scale-105 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -270,9 +362,9 @@ export default function Performance() {
             </div>
           </div>
 
-          <div className="h-[300px] sm:h-[350px] md:h-[450px] w-full mt-6 sm:mt-8 relative group">
+          <div className="w-full mt-6 sm:mt-8 relative group" style={{ height: `${optimalHeight}px` }}>
             <svg
-              className="w-full h-full overflow-visible cursor-crosshair relative z-20"
+              className="w-full h-full overflow-visible cursor-crosshair relative z-10"
               viewBox="0 0 1000 400"
               preserveAspectRatio="none"
               onMouseMove={handleMouseMove}

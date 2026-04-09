@@ -327,7 +327,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 lg:space-x-6">
             <div className="hidden lg:flex flex-col text-right">
               <p className="text-white font-bold text-xs sm:text-sm">James Wilson</p>
-              <p className="text-[#4a9d7e] text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-widest">Premium Tier</p>
+              <p className="text-[#4a9d7e] text-[8px] sm:text-[9px] md:text-[10px] font-bold uppercase tracking-widest">
+                Premium Tier
+              </p>
             </div>
             <div className="relative group cursor-pointer">
               <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 bg-gradient-to-br from-[#4a9d7e] to-[#2d5d4b] rounded-lg sm:rounded-xl flex items-center justify-center font-bold text-white text-xs sm:text-sm shadow-lg group-hover:shadow-[#4a9d7e]/20 transition-all duration-300 touch-target">

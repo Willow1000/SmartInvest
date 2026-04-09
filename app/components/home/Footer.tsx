@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   const footerLinks = [
@@ -37,9 +38,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-20">
           {/* Logo and About */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center space-x-2 mb-8">
-              <div className="w-10 h-10 bg-[#4a9d7e] rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(74,157,126,0.4)]">
-                <span className="text-white font-bold text-2xl tracking-tighter">S</span>
+             <Link href="/" className="flex items-center space-x-3 group">
+              <div className="w-12 h-12 flex items-center justify-center">
+                <Image
+                  src="/smartinvest-icon.png"
+                  alt="SmartInvest Logo"
+                  width={120}
+                  height={120}
+                  className="object-contain"
+                />
               </div>
               <span className="text-white text-2xl font-extrabold tracking-tight">SmartInvest</span>
             </Link>

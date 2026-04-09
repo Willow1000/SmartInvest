@@ -29,6 +29,18 @@ body {
   box-sizing: border-box;
 }
 
+/* Global overflow prevention */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* All sections prevent overflow */
+section, div, main {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 /* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
@@ -178,17 +190,35 @@ img, video, svg {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* About hero specific overflow fixes */
+.about-hero-container {
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 @media (min-width: 640px) {
   .responsive-container {
     padding: 0 1.5rem;
+    overflow-x: hidden;
+  }
+  .about-hero-container {
+    overflow-x: hidden;
+    overflow-y: hidden;
   }
 }
 
 @media (min-width: 1024px) {
   .responsive-container {
     padding: 0 2rem;
+    overflow-x: hidden;
+  }
+  .about-hero-container {
+    overflow-x: hidden;
+    overflow-y: hidden;
   }
 }
 

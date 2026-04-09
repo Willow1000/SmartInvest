@@ -9,7 +9,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeItem, setActiveItem] = useState('');
-  const { openSignup } = useModal();
+  const { openSignup, openLogin } = useModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,7 +87,7 @@ export default function Navbar() {
             </div>
             <div className="h-6 w-px bg-gray-800 mx-2 lg:mx-4" />
             <button
-              onClick={openSignup}
+              onClick={openLogin}
               className="text-gray-300 hover:text-white transition-all duration-200 text-base font-semibold px-3 lg:px-4 py-2"
             >
               Login
@@ -140,7 +140,7 @@ export default function Navbar() {
             ))}
             <div className="pt-4 border-t border-gray-800 flex flex-col space-y-3">
               <button
-                onClick={() => { openSignup(); setIsMenuOpen(false); }}
+                onClick={() => { openLogin(); setIsMenuOpen(false); }}
                 className="text-gray-300 hover:text-white block px-4 py-4 text-lg font-semibold text-left"
               >
                 Login

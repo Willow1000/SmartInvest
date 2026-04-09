@@ -248,7 +248,7 @@ export default function AboutHero() {
         </div>
 
         {/* Navigation Controls */}
-        <div className="mt-16 flex items-center justify-center gap-4">
+        <div className="relative z-20 mt-16 flex items-center justify-center gap-4">
           {/* Previous Button */}
           <button
             onClick={handlePrevSlide}
