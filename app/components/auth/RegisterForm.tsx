@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useModal } from './ModalContext';
+import { useToast } from '../ui/ToastContext';
 
 const countries = [
   { name: 'United States', code: '+1', flag: '🇺🇸' },
@@ -23,6 +24,7 @@ const countries = [
 
 export default function SignupModal() {
   const { isSignupOpen, closeSignup } = useModal();
+  const { showToast } = useToast();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -65,34 +67,39 @@ export default function SignupModal() {
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => {
     // Validate all required fields are filled
     if (step !== 3) {
       return;
     }
     
     try {
-      const response = await fetch('/api/auth/institutional-signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        alert('Application submitted successfully! Our institutional team will contact you within 24 hours.');
-        closeSignup();
-      } else {
-        alert(result.message || 'Failed to submit application');
-      }
+      // Simulate API call with timeout
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      // Simulate successful account creation
+      const mockUser = {
+        id: 'user-' + Date.now(),
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        balance: 0
+      };
+      
+      // Store user data in localStorage for portfolio display
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      localStorage.setItem('isAuthenticated', 'true');
+      
+      // Show success message
+      showToast('Account created successfully! Redirecting to your portfolio...', 'success');
+      
+      // Close modal and redirect to portfolio
+      closeSignup();
+      setTimeout(() => {
+        window.location.href = '/portfolio';
+      }, 1000);
     } catch (error) {
-      console.error('Submission error:', error);
-      alert('An error occurred while submitting your application');
+      showToast('An error occurred while submitting your application', 'error');
     }
   };
 

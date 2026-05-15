@@ -1,11 +1,8 @@
 'use client';
 
-import { useModal } from '../auth/ModalContext';
-
 export default function NewsModal() {
-  const { isNewsOpen, selectedNews, closeNews } = useModal();
-
-  if (!isNewsOpen || !selectedNews) return null;
+  // Auth modals hidden - no modal to display
+  return null;
 
   // Enhanced content with more detailed analysis
   const defaultContent = [

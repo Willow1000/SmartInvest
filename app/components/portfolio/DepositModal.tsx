@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useModal } from '../auth/ModalContext';
+import { useToast } from '../ui/ToastContext';
 
 type PaymentMethod = 'card' | 'crypto' | 'paypal' | 'wire' | 'bank';
 
@@ -17,12 +17,15 @@ interface PaymentMethodInfo {
 }
 
 export default function DepositModal() {
-  const { isDepositOpen, closeDeposit, addTransaction } = useModal();
+  const { showToast } = useToast();
   const [depositAmount, setDepositAmount] = useState('');
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>('card');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
   const [step, setStep] = useState(1); // 1: amount, 2: payment, 3: confirm
+  const [isDepositOpen, setIsDepositOpen] = useState(false);
+  const closeDeposit = () => setIsDepositOpen(false);
+  const addTransaction = () => {};
 
   if (!isDepositOpen) return null;
 
@@ -133,21 +136,19 @@ export default function DepositModal() {
       setError('');
 
       try {
-        // Call the async addTransaction function
-        const success = await addTransaction(amount, 'deposit');
-
-        if (success) {
-          setDepositAmount('');
-          setStep(1);
-          setIsProcessing(false);
-          setTimeout(() => {
-            closeDeposit();
-          }, 1000);
-        } else {
-          setError('Transaction failed. Please try again.');
-          setIsProcessing(false);
-        }
+        // Simulate API call with timeout
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        
+        // Simulate successful deposit
+        showToast('Deposit of $' + amount.toLocaleString() + ' processed successfully!', 'success');
+        setDepositAmount('');
+        setStep(1);
+        setIsProcessing(false);
+        setTimeout(() => {
+          closeDeposit();
+        }, 1000);
       } catch (err) {
+        showToast('Payment processing failed. Please try again.', 'error');
         setError('Payment processing failed. Please try again.');
         setIsProcessing(false);
       }

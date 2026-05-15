@@ -1,15 +1,56 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useModal } from '../auth/ModalContext';
+import React, { useState, useRef, useEffect } from 'react';
+
+const mockPerformanceHistory = Array.from({ length: 12 }, (_, i) => ({
+  value: 95000 + Math.sin(i / 3) * 15000 + Math.random() * 5000,
+  date: `Month ${i + 1}`
+}));
+
+const mockAnalytics = {
+  roi: 45.3,
+  sharpeRatio: 2.1,
+  volatility: 12.4,
+  maxDrawdown: -8.5
+};
+
+const mockCurrencyProfits = [
+  { symbol: 'USD', profit: 5234.50 },
+  { symbol: 'EUR', profit: 2145.75 },
+  { symbol: 'GBP', profit: 1890.25 }
+];
 
 export default function InvestmentAnalytics() {
-  const { performanceHistory, analytics, currencyProfits } = useModal();
+  const performanceHistory = mockPerformanceHistory;
+  const analytics = mockAnalytics;
+  const currencyProfits = mockCurrencyProfits;
 
-  // Calculate chart dimensions and points
-  const width = 800;
-  const height = 300;
-  const padding = 40;
+  // Calculate responsive chart dimensions and points
+  // Use percentage-based sizing for true responsiveness across all devices
+  const chartContainerRef = React.useRef<HTMLDivElement>(null);
+  const [chartDimensions, setChartDimensions] = React.useState({ width: 800, height: 300 });
+  
+  React.useEffect(() => {
+    const updateChartSize = () => {
+      if (chartContainerRef.current) {
+        const containerWidth = chartContainerRef.current.offsetWidth;
+        // Responsive height: scales based on container width
+        const responsiveHeight = Math.max(250, Math.min(400, containerWidth * 0.35));
+        setChartDimensions({
+          width: containerWidth,
+          height: responsiveHeight
+        });
+      }
+    };
+    
+    updateChartSize();
+    window.addEventListener('resize', updateChartSize);
+    return () => window.removeEventListener('resize', updateChartSize);
+  }, []);
+
+  const width = chartDimensions.width;
+  const height = chartDimensions.height;
+  const padding = Math.max(30, width * 0.05); // Responsive padding
   const maxValue = Math.max(...performanceHistory.map(d => d.value));
   const minValue = Math.min(...performanceHistory.map(d => d.value));
   const range = maxValue - minValue;
@@ -79,10 +120,11 @@ export default function InvestmentAnalytics() {
           </h3>
         </div>
 
-        <div className="relative h-[350px] w-full">
+        <div ref={chartContainerRef} className="relative w-full aspect-video sm:aspect-[2/1] md:aspect-[2.5/1] lg:aspect-[3/1]">
           <svg
             viewBox={`0 0 ${width} ${height}`}
-            className="w-full h-full overflow-visible cursor-crosshair relative z-20"
+            className="w-full h-full overflow-visible cursor-crosshair relative z-20 [image-rendering:crisp-edges]"
+            preserveAspectRatio="none"
             onMouseMove={handleMouseMove}
             onMouseLeave={() => setHoverIdx(null)}
           >
@@ -170,9 +212,9 @@ export default function InvestmentAnalytics() {
           )}
 
           {/* X-Axis Labels */}
-          <div className="absolute bottom-0 left-0 right-0 flex justify-between px-[40px] translate-y-4">
+          <div className="absolute bottom-0 left-0 right-0 flex justify-between px-4 sm:px-6 md:px-8 translate-y-6 sm:translate-y-7 md:translate-y-8">
             {performanceHistory.map((d, i) => (
-              <span key={i} className="text-[9px] font-bold text-gray-600 uppercase tracking-widest">
+              <span key={i} className="text-[7px] sm:text-[8px] md:text-[9px] font-bold text-gray-600 uppercase tracking-widest">
                 {d.date.split('-')[1]}/{d.date.split('-')[0].slice(2)}
               </span>
             ))}

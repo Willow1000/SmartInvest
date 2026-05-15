@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ModalProvider } from "./components/auth/ModalContext";
-import SignupModal from "./components/auth/SignupModal";
-import LoginModal from "./components/auth/LoginModal";
+import { ToastProvider } from "./components/ui/ToastContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,11 +34,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#1a1d29] text-white overflow-x-hidden`}
       >
-        <ModalProvider>
+        <ToastProvider>
           {children}
-          <SignupModal />
-          <LoginModal />
-        </ModalProvider>
+        </ToastProvider>
       </body>
     </html>
   );

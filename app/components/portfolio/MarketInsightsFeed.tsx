@@ -2,14 +2,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useModal, NewsInsight } from '../auth/ModalContext';
 import { fetchNewsData } from '../../lib/newsData';
 
+interface NewsInsight {
+  id: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  timestamp: string;
+  sentiment: string;
+  content?: string[];
+}
+
 export default function MarketInsightsFeed() {
-  const { openNews } = useModal();
   const [news, setNews] = useState<NewsInsight[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
+  const openNews = () => console.log('News modal would open');
 
   useEffect(() => {
     const loadNews = async () => {

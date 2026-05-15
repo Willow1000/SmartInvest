@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import toast from 'react-hot-toast'
+import { useToast } from '../ui/ToastContext'
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -18,13 +18,8 @@ type ContactFormData = z.infer<typeof contactSchema>
 
 export default function ContactForm() {
   const [isLoading, setIsLoading] = useState(false)
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset
-  } = useForm<ContactFormData>({
+  const { showToast } = useToast()
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema)
   })
 
@@ -32,24 +27,14 @@ export default function ContactForm() {
     setIsLoading(true)
     
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-
-      const result = await response.json()
-
-      if (result.success) {
-        toast.success('Message sent successfully! We\'ll get back to you soon.')
-        reset()
-      } else {
-        toast.error(result.message || 'Failed to send message')
-      }
+      // Simulate API call with timeout
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // Simulate successful submission
+      showToast('Message sent successfully! Our team will contact you shortly.', 'success')
+      reset()
     } catch (error) {
-      toast.error('An error occurred while sending your message')
+      showToast('An error occurred while sending your message', 'error')
     } finally {
       setIsLoading(false)
     }

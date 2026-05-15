@@ -71,6 +71,87 @@ img, video, svg {
   }
 }
 
+/* Mobile-optimized touch targets */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom scrollbar for mobile */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(74, 157, 126, 0.4);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 157, 126, 0.6);
+}
+
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive container padding */
+.responsive-container {
+  width: 100%;
+  padding: 0 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-container {
+    padding: 0 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    padding: 0 1.5rem;
+  }
+}
+
+/* Responsive card styling */
+.responsive-card {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Mobile-first button sizing */
+.btn-mobile {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .btn-mobile {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .btn-mobile {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
 /* Custom Animations */
 @keyframes draw {
   from {

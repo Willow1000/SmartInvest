@@ -1,10 +1,8 @@
 import ContactForm from '../components/contact/ContactForm'
-import { Toaster } from 'react-hot-toast'
 
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#1a1d29] py-12 px-4">
-      <Toaster position="top-right" />
       
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">

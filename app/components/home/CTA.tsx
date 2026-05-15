@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useModal } from '../auth/ModalContext';
+import Link from 'next/link';
 
 export default function CTA() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const { openSignup } = useModal();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -94,23 +93,23 @@ export default function CTA() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-1000 delay-300">
-            <button
-              onClick={openSignup}
+            <Link
+              href="/portfolio"
               className="group relative inline-flex items-center justify-center bg-[#4a9d7e] hover:bg-[#3d8567] text-white font-bold py-4 px-12 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(74,157,126,0.3)] hover:shadow-[0_0_30px_rgba(74,157,126,0.5)] overflow-hidden"
             >
-              <span className="relative z-10">Create Free Account</span>
+              <span className="relative z-10">Go to Dashboard</span>
               <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700" />
-            </button>
+            </Link>
 
-            <button
-              onClick={openSignup}
+            <Link
+              href="/portfolio"
               className="group inline-flex items-center justify-center text-gray-300 hover:text-white font-semibold py-4 px-12 rounded-xl border border-gray-700 hover:border-[#4a9d7e] transition-all duration-300"
             >
-              Schedule Demo
+              Start Trading
               <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
-            </button>
+            </Link>
           </div>
 
           {/* Trust Indicators */}

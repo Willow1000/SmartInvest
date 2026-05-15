@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import { useModal } from './ModalContext';
+import { useToast } from '../ui/ToastContext';
 
 export default function LoginModal() {
   const { isLoginOpen, closeLogin } = useModal();
+  const { showToast } = useToast();
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -16,24 +18,14 @@ export default function LoginModal() {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/auth/magic-link', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setIsSubmitted(true);
-      } else {
-        alert(result.message || 'Failed to send magic link');
-      }
+      // Simulate API call with timeout
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // Simulate successful magic link send
+      setIsSubmitted(true);
+      showToast('Magic link sent successfully! Please check your email.', 'success');
     } catch (error) {
-      console.error('Magic link error:', error);
-      alert('An error occurred while sending the magic link');
+      showToast('An error occurred while sending the magic link', 'error');
     } finally {
       setIsSubmitting(false);
     }

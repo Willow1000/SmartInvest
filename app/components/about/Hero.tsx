@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useModal } from '../auth/ModalContext';
+import Link from 'next/link';
 
 export default function AboutHero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -9,7 +9,6 @@ export default function AboutHero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
-  const { openSignup } = useModal();
 
   const slides = [
     {

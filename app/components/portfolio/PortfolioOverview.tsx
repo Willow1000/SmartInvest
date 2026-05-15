@@ -1,8 +1,19 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useModal } from '../auth/ModalContext';
+import React, { useState, useMemo } from 'react';
 import TradingAutomations from './TradingAutomations';
+
+// Mock data for portfolio
+const mockCurrencyProfits = [
+  { symbol: 'USD', profit: 5234.50, investment: 10000 },
+  { symbol: 'EUR', profit: 2145.75, investment: 5000 },
+  { symbol: 'GBP', profit: 1890.25, investment: 4000 }
+];
+
+const mockTransactions = [
+  { id: 1, type: 'deposit', amount: 1000, date: new Date().toLocaleDateString() },
+  { id: 2, type: 'trade', amount: 500, date: new Date().toLocaleDateString() }
+];
 
 // Deterministic random walk generator for realistic charts
 const generatePath = (seed: number, pointsCount: number, startY: number, endY: number, volatility: number) => {
@@ -37,8 +48,21 @@ const generatePath = (seed: number, pointsCount: number, startY: number, endY: n
 };
 
 export default function PortfolioOverview() {
-  const { openDeposit, openWithdraw, balance, currencyProfits, transactions } = useModal();
   const [activeTimeframe, setActiveTimeframe] = useState('ALL');
+  const [userBalance, setUserBalance] = useState(50000);
+  const balance = userBalance;
+  const currencyProfits = mockCurrencyProfits;
+  const transactions = mockTransactions;
+  const openDeposit = () => console.log('Deposit modal would open');
+  const openWithdraw = () => console.log('Withdraw modal would open');
+  
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserBalance(user.balance || balance);
+    }
+  }, [balance]);
 
   const totalEarnings = currencyProfits.reduce((acc, curr) => acc + curr.profit, 0);
   const totalInvestment = currencyProfits.reduce((acc, curr) => acc + curr.investment, 0);
@@ -85,55 +109,61 @@ export default function PortfolioOverview() {
     <div className="space-y-24 md:space-y-32">
 
       {/* SECTION 1: OVERVIEW & PERFORMANCE (Full Height / Prominent) */}
-      <section className="min-h-[85vh] flex flex-col justify-center relative">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#4a9d7e]/10 rounded-full blur-[100px] pointer-events-none" />
+      <section className="min-h-screen md:min-h-[85vh] flex flex-col justify-center relative py-8 md:py-0">
+        <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-[#4a9d7e]/10 rounded-full blur-[100px] pointer-events-none" />
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 relative z-10 w-full max-w-7xl mx-auto">
-          <div>
-            <p className="text-[#4a9d7e] font-bold text-xs uppercase tracking-[0.2em] mb-4">Total Portfolio Equity</p>
-            <h1 className="text-6xl md:text-7xl font-extrabold text-white tracking-tighter mb-4">
-              ${balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+        {/* Mobile: Stacked layout | Desktop: Side-by-side */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-12 mb-8 md:mb-12 relative z-10 w-full">
+          {/* Left: Balance & Metrics */}
+          <div className="w-full md:flex-1 min-w-0">
+            <p className="text-[#4a9d7e] font-bold text-xs uppercase tracking-[0.2em] mb-2 md:mb-4">Total Portfolio Equity</p>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tighter mb-4 break-words">
+              ${userBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
             </h1>
-            <div className="flex items-center gap-4">
-              <div className="px-3 py-1.5 bg-[#4a9d7e]/20 text-[#4a9d7e] rounded-lg font-bold text-lg flex items-center gap-1">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex flex-wrap items-center gap-3 md:gap-4">
+              <div className="px-3 py-1.5 bg-[#4a9d7e]/20 text-[#4a9d7e] rounded-lg font-bold text-base md:text-lg flex items-center gap-1">
+                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
                 {currentData.percent}
               </div>
-              <span className="text-gray-500 font-medium">{activeTimeframe === 'ALL' ? 'All Time' : activeTimeframe}</span>
+              <span className="text-gray-500 font-medium text-sm md:text-base">{activeTimeframe === 'ALL' ? 'All Time' : activeTimeframe}</span>
             </div>
           </div>
 
-          <div className="mt-8 md:mt-0 flex flex-col items-end gap-6">
-            <div className="flex bg-[#1a1d29]/80 p-1.5 rounded-xl border border-gray-800/50 backdrop-blur-md">
+          {/* Right: Controls */}
+          <div className="w-full md:w-auto flex flex-col gap-4 md:gap-6">
+            {/* Timeframe Selector */}
+            <div className="flex bg-[#1a1d29]/80 p-1 md:p-1.5 rounded-lg md:rounded-xl border border-gray-800/50 backdrop-blur-md overflow-x-auto">
               {['1D', '1W', '1M', 'YTD', 'ALL'].map((tf) => (
                 <button
                   key={tf}
                   onClick={() => setActiveTimeframe(tf)}
-                  className={`px-4 py-2 ${activeTimeframe === tf ? 'bg-[#252836] text-white shadow-md' : 'text-gray-500 hover:text-white'} rounded-lg text-xs font-bold transition-all`}
+                  className={`px-3 md:px-4 py-1.5 md:py-2 flex-shrink-0 ${activeTimeframe === tf ? 'bg-[#252836] text-white shadow-md' : 'text-gray-500 hover:text-white'} rounded-lg text-xs md:text-sm font-bold transition-all`}
                 >
                   {tf}
                 </button>
               ))}
             </div>
-            <div className="flex gap-3">
-              <button onClick={openDeposit} className="px-8 py-3 bg-[#4a9d7e] hover:bg-[#3d8567] text-white rounded-xl font-bold text-sm tracking-wide transition-colors">
+            
+            {/* Action Buttons */}
+            <div className="flex gap-2 md:gap-3">
+              <button onClick={openDeposit} className="flex-1 md:flex-none px-6 md:px-8 py-2.5 md:py-3 bg-[#4a9d7e] hover:bg-[#3d8567] text-white rounded-lg md:rounded-xl font-bold text-xs md:text-sm tracking-wide transition-colors">
                 Quick Deposit
               </button>
-              <button onClick={openWithdraw} className="px-8 py-3 bg-[#252836] hover:bg-[#2c3040] text-white border border-gray-700/50 rounded-xl font-bold text-sm tracking-wide transition-colors">
+              <button onClick={openWithdraw} className="flex-1 md:flex-none px-6 md:px-8 py-2.5 md:py-3 bg-[#252836] hover:bg-[#2c3040] text-white border border-gray-700/50 rounded-lg md:rounded-xl font-bold text-xs md:text-sm tracking-wide transition-colors">
                 Withdraw
               </button>
             </div>
           </div>
         </div>
 
-        {/* Large Faux SVG Chart */}
-        <div className="relative w-full max-w-7xl mx-auto h-80 md:h-[400px] bg-[#1a1d29]/40 border border-gray-800/50 rounded-3xl overflow-hidden group">
+        {/* Chart Container - Responsive height */}
+        <div className="relative w-full h-64 sm:h-80 md:h-[400px] lg:h-[450px] bg-[#1a1d29]/40 border border-gray-800/50 rounded-xl md:rounded-3xl overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-t from-[#1a1d29] to-transparent z-10 pointer-events-none" />
 
           {/* Grid lines */}
-          <div className="absolute inset-0 flex flex-col justify-between py-8 px-4 z-0 opacity-20 pointer-events-none">
+          <div className="absolute inset-0 flex flex-col justify-between py-4 md:py-8 px-3 md:px-4 z-0 opacity-20 pointer-events-none">
             {[1, 2, 3, 4, 5].map(i => <div key={i} className="w-full h-px bg-gray-600" />)}
           </div>
 
@@ -161,13 +191,13 @@ export default function PortfolioOverview() {
               style={{ left: `${(hoverIdx / 99) * 100}%` }}
             >
               <div
-                className="absolute left-0 w-4 h-4 bg-[#1a1d29] border-2 border-[#4a9d7e] rounded-full shadow-[0_0_15px_#4a9d7e]"
+                className="absolute left-0 w-3 md:w-4 h-3 md:h-4 bg-[#1a1d29] border-2 border-[#4a9d7e] rounded-full shadow-[0_0_15px_#4a9d7e]"
                 style={{ top: `${(currentData.pathData.points[hoverIdx].y / 200) * 100}%`, transform: 'translate(-50%, -50%)' }}
               />
-              <div className={`absolute top-[20%] bg-[#252836] border border-gray-700 p-3 rounded-xl pointer-events-none min-w-[120px] shadow-2xl z-40 ${hoverIdx > 70 ? 'right-full mr-4' : 'left-full ml-4'}`}>
-                <p className="text-gray-400 text-[10px] font-bold uppercase mb-1">Portfolio Value</p>
-                <p className="text-white font-bold text-lg">
-                  ${(balance * (1 - (currentData.pathData.points[hoverIdx].y - 100) * 0.002)).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              <div className={`absolute top-[20%] bg-[#252836] border border-gray-700 p-2 md:p-3 rounded-lg md:rounded-xl pointer-events-none min-w-[110px] shadow-2xl z-40 text-sm md:text-base ${hoverIdx > 70 ? 'right-full mr-2 md:mr-4' : 'left-full ml-2 md:ml-4'}`}>
+                <p className="text-gray-400 text-[9px] md:text-[10px] font-bold uppercase mb-1">Portfolio Value</p>
+                <p className="text-white font-bold text-sm md:text-lg">
+                  ${(userBalance * (1 - (currentData.pathData.points[hoverIdx].y - 100) * 0.002)).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </p>
               </div>
             </div>

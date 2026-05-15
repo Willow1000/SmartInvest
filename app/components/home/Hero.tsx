@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { useModal } from '../auth/ModalContext';
+import Link from 'next/link';
 
 export default function Hero() {
   const [isMounted, setIsMounted] = useState(false);
@@ -10,7 +10,6 @@ export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mousePosition = useRef({ x: 0, y: 0 });
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
-  const { openSignup } = useModal();
 
   const [metrics, setMetrics] = useState({
     aum: 2.40,
